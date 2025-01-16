@@ -1,20 +1,14 @@
-// Fonction utilitaire pour vérifier si un nœud est dans un composant
-function isInComponent(node) {
-    let parent = node.parent;
-    while (parent) {
-        if (parent.type === 'COMPONENT' || parent.type === 'COMPONENT_SET' || parent.type === 'INSTANCE') {
-            return true;
-        }
-        parent = parent.parent;
-    }
-    return false;
+// Fonction utilitaire pour vérifier si un nœud est directement dans un composant
+function isDirectlyInComponent(node) {
+    const parent = node.parent;
+    return parent && (parent.type === 'COMPONENT' || parent.type === 'COMPONENT_SET' || parent.type === 'INSTANCE');
 }
 
 // Trouver tous les vecteurs sur la page
 const allNodes = figma.currentPage.findAll(node => node.type === 'VECTOR');
 
-// Filtrer les vecteurs qui ne sont PAS dans des composants ou des instances
-const standaloneVectors = allNodes.filter(node => !isInComponent(node));
+// Filtrer les vecteurs qui ne sont PAS directement dans des composants ou des instances
+const standaloneVectors = allNodes.filter(node => !isDirectlyInComponent(node));
 
 // Sélectionner automatiquement les vecteurs autonomes
 figma.currentPage.selection = standaloneVectors;
